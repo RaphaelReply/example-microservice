@@ -1,0 +1,206 @@
+#%RAML 0.8
+---
+title: onlineshop API
+baseUri: http://localhost.com/{version}
+version: v0.1.0
+   
+/customers
+    description: Collection of all customers of the shop
+    get:
+        description: Get a list of all customers of the shop
+        responses:
+            200:
+                body:
+                  application/json:
+                    schema: |
+                        {
+                            "type": "array",
+                            "$schema": "http://json-schema.org/draft-04/schema#",
+                            "properties": {
+                                "type": "object",
+                                "properties": {
+                                    "customerId": {
+                                        "type": "number",
+                                        "required": true
+                                        "minLength": 10,
+                                        "maxLength": 10
+                                    },
+                                    "salutation": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "firstname": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "lastname": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "active": {
+                                        "type": "boolean",
+                                        "required": true
+                                    }
+                                }    
+                            }                            
+                        }
+                    example: |
+                      "customers": [
+                          {
+                            "customerId": 7876470141,
+                            "salutation": "Herr"
+                            "firstname": "Fabian"
+                            "lastname": "Voehl"
+                            "active": true
+                          },
+                          {
+                            "customerId": 5461262114,
+                            "salutation": "Herr"
+                            "firstname": "Raphael"
+                            "lastname": "Witte"
+                            "active": false
+                          }
+                          ]
+            404:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "http_status_code": 404,
+                                "app_error_code": 404,
+                                "message": "No customers found!",
+                                "developerMessage": "There are no customers currently present in the database"
+                            }
+    description: Create a new customer
+    post:
+        description: Add a new customer
+        body:
+            application/json
+            schema: |
+                {
+                    "type": "array",
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "properties": {
+                        "type": "object",
+                        "properties": {
+                            "customerId": {
+                                "type": "number",
+                                "required": false
+                                "minLength": 10,
+                                "maxLength": 10
+                            },
+                            "salutation": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "firstname": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "lastname": {
+                                "type": "string",
+                                "required": true
+                            }
+                        }    
+                    }                            
+                }
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "The customer was created with ID xyz"
+                                }
+    /{id}
+        description: partial update of a customer entity
+        post:
+            description: update the salutation of the customer with the respective id
+         	body:
+	            application/json
+	            schema: |
+	                {
+	                    "type": "array",
+	                    "$schema": "http://json-schema.org/draft-04/schema#",
+	                    "properties": {
+	                        "type": "object",
+	                        "properties": {
+	                            "salutation": {
+	                                "type": "string",
+	                                "required": true
+	                            }
+	                        }    
+	                    }                            
+	                }
+	            responses:
+	                200:
+	                    body:
+	                        application/json:
+	                            example: |
+	                                {
+	                                    "message": "The customer salutation has been changed to {salutation} for the customer with ID {id}"
+	                                }
+	                404:
+                        body:
+	                        application/json:
+	                            example: |
+	                                {
+	                                    "http_status_code":400,
+	                                    "app_error_code":400,
+	                                    "message":"No update possible. Please specify the new salutation",
+	                                    "developerMessage":"The salutation was null, so no salutation was given via JSON as input"
+	                                }
+        description: Customer entity
+        get:
+            description: Get the customer with the respective id.
+            responses:
+                200:
+                    body:
+                        application/json:
+                            schema: |
+                                {
+                                    "type": "object",
+                                    "$schema": "http://json-schema.org/draft-04/schema#",
+                                    "properties": {
+	                                        "customerId": {
+	                                        "type": "number",
+	                                        "required": true
+	                                        "minLength": 10,
+	                                        "maxLength": 10
+	                                    },
+	                                    "salutation": {
+	                                        "type": "string",
+	                                        "required": true
+	                                    },
+	                                    "firstname": {
+	                                        "type": "string",
+	                                        "required": true
+	                                    },
+	                                    "lastname": {
+	                                        "type": "string",
+	                                        "required": true
+	                                    },
+	                                    "active": {
+	                                        "type": "boolean",
+	                                        "required": true
+	                                    }
+                                    }
+                                }
+                            example: |
+                                {
+                                    "customerId": 7876470141,
+		                            "salutation": "Herr"
+		                            "firstname": "Fabian"
+		                            "lastname": "Voehl"
+		                            "active": true
+                                }
+                404:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "http_status_code":404,
+                                    "app_error_code":404,
+                                    "message":"The requested customer was not found",
+                                    "developerMessage":"Check if the customer with id {id} really exists in the ArrayList"
+                                }
